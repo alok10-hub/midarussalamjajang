@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIAKAD - MI DARUSALAM JAJANG-SUMBEREJO-PONCOKUSUMO-MALANG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col md:flex-row">
+
+    <aside class="w-full md:w-72 bg-emerald-950 text-white flex-shrink-0 p-4 flex flex-col justify-between shadow-2xl">
+        <div>
+            <!-- Header Brand & School Logo -->
+            <div class="flex items-center gap-3 px-2 py-3 mb-6 border-b border-emerald-800/80">
+                <img src="https://i.imgur.com/v7r3hiv.jpeg" alt="Logo MI Darusalam" class="w-12 h-12 rounded-full object-cover border-2 border-amber-400 shadow-lg" onerror="this.src='https://placehold.co/100x100/065f46/ffffff?text=MI+Darusalam'">
+                <div class="overflow-hidden">
+                    <h1 class="font-bold text-xs leading-tight text-amber-300 uppercase tracking-wider">MI DARUSALAM</h1>
+                    <p class="text-[10px] text-emerald-200 truncate">Jajang - Sumberejo - Malang</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-1.5 text-sm font-medium">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition text-amber-300 bg-emerald-800/80 font-semibold shadow-sm">
+                    <i class="fa-solid fa-chart-pie w-5 text-amber-400"></i> Dashboard
+                </button>
+                <button onclick="switchTab('kelas')" id="nav-kelas" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition text-emerald-100 hover:bg-emerald-800 hover:text-white">
+                    <i class="fa-solid fa-chalkboard-user w-5"></i> Kelola Kelas
+                </button>
+                <button onclick="switchTab('siswa')" id="nav-siswa" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition text-emerald-100 hover:bg-emerald-800 hover:text-white">
+                    <i class="fa-solid fa-user-graduate w-5"></i> Data Siswa
+                </button>
+                <button onclick="switchTab('absen')" id="nav-absen" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition text-emerald-100 hover:bg-emerald-800 hover:text-white">
+                    <i class="fa-solid fa-clipboard-user w-5"></i> Tabel Presensi/Absen
+                </button>
+                <button onclick="switchTab('nilai')" id="nav-nilai" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition text-emerald-100 hover:bg-emerald-800 hover:text-white">
+                    <i class="fa-solid fa-award w-5"></i> Penilaian Siswa
+                </button>
+                <button onclick="switchTab('jadwal')" id="nav-jadwal" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition text-emerald-100 hover:bg-emerald-800 hover:text-white">
+                    <i class="fa-solid fa-calendar-days w-5"></i> Jadwal Pelajaran
+                </button>
+                <button onclick="switchTab('jurnal')" id="nav-jurnal" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition text-emerald-100 hover:bg-emerald-800 hover:text-white">
+                    <i class="fa-solid fa-book-bookmark w-5"></i> Jurnal Kelas
+                </button>
+
+                <!-- Dedicated Spreadsheet Configuration Button -->
+                <button onclick="openModal('modal-spreadsheet')" id="nav-spreadsheet" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition text-emerald-200 bg-emerald-900/60 hover:bg-emerald-800 hover:text-white mt-6 border border-emerald-700/60 shadow-inner">
+                    <span class="flex items-center gap-2.5 text-xs font-bold">
+                        <i class="fa-solid fa-file-excel text-emerald-400 text-sm"></i> Integrasi Spreadsheet
+                    </span>
+                    <i class="fa-solid fa-gear text-xs text-amber-300"></i>
+                </button>
+            </nav>
+        </div>
+
+        <div class="pt-4 border-t border-emerald-800/80 text-[10px] text-emerald-300 px-1 text-center font-semibold leading-relaxed">
+            SIAKAD Digital &copy; 2026<br>
+            <span class="text-amber-300">MADRASAH IBTIDAIYAH DARUSALAM JAJANG-SUMBEREJO-PONCOKUSUMO-MALANG</span>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto custom-scrollbar p-4 md:p-8">
+        
+        <!-- Header Controls & Realtime WIB Clock -->
+        <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200 mb-6 bg-white p-5 rounded-2xl shadow-sm">
+            <div>
+                <h2 id="page-title" class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight">Dashboard Utama</h2>
+                <p id="page-subtitle" class="text-xs md:text-sm text-slate-500 mt-0.5">Ringkasan aktivitas akademik MI Darusalam</p>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-3">
+                <!-- Sync Trigger Button -->
+                <button onclick="syncToSpreadsheet()" id="sync-btn" title="Sinkronkan data langsung ke Google Spreadsheet" class="flex items-center gap-2 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-800 transition shadow-sm">
+                    <i id="sync-icon" class="fa-solid fa-rotate text-emerald-600"></i>
+                    <span id="sync-text">Sinkron ke Sheets</span>
+                </button>
+
+                <!-- Realtime WIB Clock Widget -->
+                <div class="bg-gradient-to-r from-emerald-900 to-emerald-800 text-white px-4 py-2 rounded-xl text-center sm:text-right shadow-sm">
+                    <div class="text-[9px] font-bold uppercase tracking-widest text-amber-300">Waktu Realtime WIB</div>
+                    <div id="wib-clock" class="text-xs sm:text-sm font-bold font-mono text-white">00:00:00 WIB - Loading...</div>
+                </div>
+
+                <!-- Active Class Selector -->
+                <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200 shadow-inner">
+                    <span class="text-xs font-bold uppercase text-slate-600 pl-2">Kelas:</span>
+                    <select id="active-class-select" onchange="changeActiveClass(this.value)" class="bg-white text-slate-800 text-xs font-bold rounded-lg px-3 py-1.5 focus:outline-none border border-slate-300 cursor-pointer shadow-sm">
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <!-- SEC 1: DASHBOARD OVERVIEW -->
+        <section id="sec-dashboard" class="space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Kelas</p>
+                        <h3 id="stat-total-kelas" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                    </div>
+                    <div class="p-3.5 bg-emerald-50 text-emerald-600 rounded-xl">
+                        <i class="fa-solid fa-door-open text-xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Siswa Aktif</p>
+                        <h3 id="stat-total-siswa" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                    </div>
+                    <div class="p-3.5 bg-blue-50 text-blue-600 rounded-xl">
+                        <i class="fa-solid fa-users text-xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kehadiran Siswa Hari Ini</p>
+                        <h3 id="stat-hadir-rate" class="text-2xl font-black text-emerald-600 mt-1">0%</h3>
+                    </div>
+                    <div class="p-3.5 bg-teal-50 text-teal-600 rounded-xl">
+                        <i class="fa-solid fa-user-check text-xl"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Mata Pelajaran</p>
+                        <h3 id="stat-total-mapel" class="text-2xl font-black text-amber-600 mt-1">0</h3>
+                    </div>
+                    <div class="p-3.5 bg-amber-50 text-amber-600 rounded-xl">
+                        <i class="fa-solid fa-book text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Class Cards Overview -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-chalkboard text-emerald-600"></i> Ringkasan Wali Kelas & Rombongan Belajar
+                </h3>
+                <div id="dashboard-class-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="sec-kelas" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div>
+                    <h3 class="text-base font-bold text-slate-800">Daftar Seluruh Kelas</h3>
+                    <p class="text-xs text-slate-500">Kelola daftar rombel dan penugasan guru wali kelas.</p>
+                </div>
+                <button onclick="openClassModal()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs flex items-center gap-2 transition shadow-sm">
+                    <i class="fa-solid fa-plus"></i> Tambah Kelas Baru
+                </button>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs md:text-sm">
+                        <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="p-4 w-16 text-center">No</th>
+                                <th class="p-4">Nama Kelas</th>
+                                <th class="p-4">Wali Kelas</th>
+                                <th class="p-4 text-center">Jumlah Siswa</th>
+                                <th class="p-4 text-center w-36">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-kelas-body" class="divide-y divide-slate-100">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="sec-siswa" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div>
+                    <h3 class="text-base font-bold text-slate-800">Data Biodata Siswa</h3>
+                    <p class="text-xs text-slate-500">Kelola identitas siswa di <span class="active-class-label font-bold text-emerald-600">Kelas 1</span></p>
+                </div>
+                <button onclick="openStudentModal()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs flex items-center gap-2 transition shadow-sm">
+                    <i class="fa-solid fa-user-plus"></i> Tambah Siswa Baru
+                </button>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs md:text-sm">
+                        <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="p-4 w-12 text-center">No</th>
+                                <th class="p-4">NISN / Nomor Induk</th>
+                                <th class="p-4">Nama Lengkap Siswa</th>
+                                <th class="p-4">Tempat, Tanggal Lahir</th>
+                                <th class="p-4 text-center w-36">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-siswa-body" class="divide-y divide-slate-100">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="sec-absen" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div>
+                    <h3 class="text-base font-bold text-slate-800">Tabel Presensi & Absensi Siswa</h3>
+                    <p class="text-xs text-slate-500">Pengabsenan harian per tanggal untuk <span class="active-class-label font-bold text-emerald-600">Kelas 1</span></p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <label class="text-xs font-bold text-slate-600 uppercase">Pilih Tanggal Presensi:</label>
+                    <input type="date" id="absen-date-picker" onchange="renderAbsensi()" class="bg-slate-50 border border-slate-300 text-xs font-bold rounded-xl p-2.5 text-slate-700 focus:ring-2 focus:ring-emerald-500">
+                    <button onclick="saveAllAbsenHariIni()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs flex items-center gap-2 transition shadow-sm">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Presensi
+                    </button>
+                </div>
+            </div>
+
+            <!-- Attendance Table -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-5">
+                <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                    <h4 class="font-bold text-slate-800 text-sm" id="absen-hari-tanggal-title">Presensi Hari Ini: -</h4>
+                    <span class="text-xs text-slate-400">Pilih status (Hadir/Izin/Sakit/Alpha) lalu klik Simpan Presensi</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs md:text-sm">
+                        <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="p-3 w-12 text-center">No</th>
+                                <th class="p-3">Nama Siswa</th>
+                                <th class="p-3 text-center">Status Presensi</th>
+                                <th class="p-3">Keterangan Catatan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-absen-body" class="divide-y divide-slate-100">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Historical Grouped Attendance Logs -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <h4 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-emerald-600"></i> Rekapan Riwayat Presensi Terdaftar
+                </h4>
+                <div id="absen-history-container" class="space-y-3">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="sec-nilai" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div>
+                    <h3 class="text-base font-bold text-slate-800">Daftar Penilaian Siswa</h3>
+                    <p class="text-xs text-slate-500">Input Nilai Harian (40%), UTS (30%), UAS (30%) & Nilai Akhir <span class="active-class-label font-bold text-emerald-600">Kelas 1</span></p>
+                </div>
+                <button onclick="openManageMapelModal()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs flex items-center gap-2 transition shadow-sm">
+                    <i class="fa-solid fa-book-medical"></i> Kelola / Tambah Mata Pelajaran
+                </button>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-5">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs md:text-sm">
+                        <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="p-3 w-12 text-center">No</th>
+                                <th class="p-3">Nama Siswa</th>
+                                <th class="p-3">Mata Pelajaran</th>
+                                <th class="p-3 text-center">Harian (40%)</th>
+                                <th class="p-3 text-center">UTS (30%)</th>
+                                <th class="p-3 text-center">UAS (30%)</th>
+                                <th class="p-3 text-center bg-emerald-50 text-emerald-900">Nilai Akhir</th>
+                                <th class="p-3 text-center w-28">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-nilai-body" class="divide-y divide-slate-100">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="sec-jadwal" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div>
+                    <h3 class="text-base font-bold text-slate-800">Jadwal Pelajaran Kelas</h3>
+                    <p class="text-xs text-slate-500">Pengaturan jadwal harian untuk <span class="active-class-label font-bold text-emerald-600">Kelas 1</span></p>
+                </div>
+                <button onclick="openScheduleModal()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs flex items-center gap-2 transition shadow-sm">
+                    <i class="fa-solid fa-calendar-plus"></i> Tambah Item Jadwal
+                </button>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs md:text-sm">
+                        <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="p-4 w-12 text-center">No</th>
+                                <th class="p-4 w-28">Hari</th>
+                                <th class="p-4 w-36">Jam Pelajaran</th>
+                                <th class="p-4">Mata Pelajaran</th>
+                                <th class="p-4">Guru Pengajar</th>
+                                <th class="p-4 text-center w-32">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-jadwal-body" class="divide-y divide-slate-100">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="sec-jurnal" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div>
+                    <h3 class="text-base font-bold text-slate-800">Jurnal Pengajaran Kelas</h3>
+                    <p class="text-xs text-slate-500">Catatan materi harian & kendala pengajaran <span class="active-class-label font-bold text-emerald-600">Kelas 1</span></p>
+                </div>
+                <button onclick="openJurnalModal()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs flex items-center gap-2 transition shadow-sm">
+                    <i class="fa-solid fa-pen-nib"></i> Tambah Jurnal Mengajar
+                </button>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs md:text-sm">
+                        <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="p-4 w-12 text-center">No</th>
+                                <th class="p-4 w-28">Tanggal</th>
+                                <th class="p-4 w-24">Jam Ke-</th>
+                                <th class="p-4">Mata Pelajaran & Guru</th>
+                                <th class="p-4">Materi Pembelajaran</th>
+                                <th class="p-4">Catatan / Kejadian</th>
+                                <th class="p-4 text-center w-28">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-jurnal-body" class="divide-y divide-slate-100">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Official Footer -->
+        <footer class="mt-auto pt-8 pb-4 text-center border-t border-slate-200 text-xs text-slate-500">
+            <p class="font-extrabold text-slate-800 uppercase tracking-wide">MADRASAH IBTIDAIYAH DARUSALAM JAJANG-SUMBEREJO-PONCOKUSUMO-MALANG</p>
+            <p class="text-[11px] text-slate-400 mt-1">Sistem Informasi Akademik Sekolah Terpadu &copy; 2026</p>
+        </footer>
+
+    </main>
+
+    <div id="modal-spreadsheet" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-slate-100">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-file-excel text-emerald-600 text-base"></i> Pengaturan Integrasi Google Spreadsheet
+                </h3>
+                <button onclick="closeModal('modal-spreadsheet')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-6 space-y-4 text-xs md:text-sm">
+                <p class="text-slate-600 leading-relaxed text-xs">
+                    Masukkan <strong>Web App </strong> yang dihasilkan dari Google Apps Script (<code class="bg-slate-100 px-1 py-0.5 rounded text-emerald-800 font-mono font-bold">code.gs</code>) Anda untuk menghubungkan data sekolah secara otomatis.
+                </p>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Google Apps Script Web App URL</label>
+                    <input type="url" id="spreadsheet-web-app-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full text-xs font-mono border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+                <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed">
+                    <i class="fa-solid fa-circle-info text-amber-600 mr-1"></i> Saat tombol <strong>Simpan & Sinkronkan</strong> diklik, backend akan secara otomatis membuat dan menyusun 7 sheet worksheet khusus di  Spreadsheet Anda.
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('modal-spreadsheet')" class="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded-xl">Batal</button>
+                    <button type="button" onclick="saveSpreadsheetConfig()" class="px-4 py-2 text-xs bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold shadow-sm">Simpan & Sinkronkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Kelas -->
+    <div id="modal-kelas" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 id="modal-kelas-title" class="font-bold text-slate-800 text-sm">Tambah Kelas Baru</h3>
+                <button onclick="closeModal('modal-kelas')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="form-kelas" onsubmit="saveKelas(event)" class="p-6 space-y-4">
+                <input type="hidden" id="kelas-id">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Kelas</label>
+                    <input type="text" id="kelas-nama" required placeholder="Contoh: Kelas 1A" class="w-full text-xs border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Wali Kelas</label>
+                    <input type="text" id="kelas-wali" required placeholder="Contoh: Ustadz Ahmad, S.Pd.I" class="w-full text-xs border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('modal-kelas')" class="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded-xl">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-xs bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Siswa -->
+    <div id="modal-siswa" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 id="modal-siswa-title" class="font-bold text-slate-800 text-sm">Tambah Data Siswa</h3>
+                <button onclick="closeModal('modal-siswa')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="form-siswa" onsubmit="saveSiswa(event)" class="p-6 space-y-4">
+                <input type="hidden" id="siswa-id">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">NISN / Nomor Induk</label>
+                    <input type="text" id="siswa-nisn" placeholder="12345678" class="w-full text-xs border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nama Lengkap Siswa</label>
+                    <input type="text" id="siswa-nama" required placeholder="Ahmad Abdullah" class="w-full text-xs border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tempat Lahir</label>
+                        <input type="text" id="siswa-tempat" required placeholder="Malang" class="w-full text-xs border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tgl Lahir</label>
+                        <input type="date" id="siswa-tgl" required class="w-full text-xs border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('modal-siswa')" class="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded-xl">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-xs bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Custom Mapel -->
+    <div id="modal-mapel" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-slate-800 text-sm">Kelola Mata Pelajaran</h3>
+                <button onclick="closeModal('modal-mapel')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex gap-2">
+                    <input type="text" id="mapel-baru-input" placeholder="Nama Mapel Baru..." class="flex-1 text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    <button onclick="addCustomMapel()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold">Tambah</button>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">Daftar Mata Pelajaran Terdaftar:</h4>
+                    <ul id="mapel-list" class="divide-y divide-slate-100 max-h-48 overflow-y-auto custom-scrollbar border border-slate-200 rounded-xl p-2">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Input Nilai -->
+    <div id="modal-nilai" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-slate-800 text-sm">Input / Edit Nilai Siswa</h3>
+                <button onclick="closeModal('modal-nilai')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="form-nilai" onsubmit="saveNilaiSiswa(event)" class="p-6 space-y-3">
+                <input type="hidden" id="nilai-siswa-id">
+                <p id="nilai-siswa-nama" class="font-bold text-emerald-800 text-xs mb-2"></p>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Mata Pelajaran</label>
+                    <select id="nilai-mapel-select" required class="w-full text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <!-- Options populated by JS -->
+                    </select>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Harian (40%)</label>
+                        <input type="number" min="0" max="100" id="nilai-harian" required class="w-full text-xs border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">UTS (30%)</label>
+                        <input type="number" min="0" max="100" id="nilai-uts" required class="w-full text-xs border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">UAS (30%)</label>
+                        <input type="number" min="0" max="100" id="nilai-uas" required class="w-full text-xs border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-3">
+                    <button type="button" onclick="closeModal('modal-nilai')" class="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded-xl">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-xs bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold">Simpan Nilai</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Jadwal -->
+    <div id="modal-jadwal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 id="modal-jadwal-title" class="font-bold text-slate-800 text-sm">Tambah Jadwal Pelajaran</h3>
+                <button onclick="closeModal('modal-jadwal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="form-jadwal" onsubmit="saveJadwal(event)" class="p-6 space-y-4">
+                <input type="hidden" id="jadwal-id">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Hari</label>
+                        <select id="jadwal-hari" class="w-full text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500">
+                            <option value="Senin">Senin</option>
+                            <option value="Selasa">Selasa</option>
+                            <option value="Rabu">Rabu</option>
+                            <option value="Kamis">Kamis</option>
+                            <option value="Jumat">Jumat</option>
+                            <option value="Sabtu">Sabtu</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Jam Pelajaran</label>
+                        <input type="text" id="jadwal-jam" required placeholder="07:00 - 08:15" class="w-full text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Mata Pelajaran</label>
+                    <select id="jadwal-mapel" required class="w-full text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Guru Pengajar</label>
+                    <input type="text" id="jadwal-guru" required placeholder="Ibu Siti, S.Pd.I" class="w-full text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('modal-jadwal')" class="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded-xl">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-xs bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Jurnal Kelas -->
+    <div id="modal-jurnal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-slate-800 text-sm">Catatan Jurnal Kelas</h3>
+                <button onclick="closeModal('modal-jurnal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="form-jurnal" onsubmit="saveJurnal(event)" class="p-6 space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tanggal</label>
+                        <input type="date" id="jurnal-tgl" required class="w-full text-xs border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Jam Ke-</label>
+                        <input type="text" id="jurnal-jam" required placeholder="1-2 (07.00-08.15)" class="w-full text-xs border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Mata Pelajaran</label>
+                    <select id="jurnal-mapel" required class="w-full text-xs border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Guru Pengajar</label>
+                    <input type="text" id="jurnal-guru" required placeholder="Nama Guru" class="w-full text-xs border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Materi Pembelajaran</label>
+                    <textarea id="jurnal-materi" required rows="2" placeholder="Judul bab / bahasan..." class="w-full text-xs border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Catatan / Kendala</label>
+                    <input type="text" id="jurnal-catatan" placeholder="Siswa tertib, lancar..." class="w-full text-xs border border-slate-300 rounded-xl p-2 focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('modal-jurnal')" class="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded-xl">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-xs bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold">Simpan Jurnal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50 border border-slate-800">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toast-msg" class="text-xs font-bold">Data berhasil diperbarui!</span>
+    </div>
+
+    <script>
+        // Masukkan Web App URL dari Deployment Apps Script Anda di sini
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2PhR9WIH1NMZIfhCfnGd_EZ7VY5IwbuYX5KgC-zb-8p_Ma6Zf49pZXFvJpkStqZfOnw/exec";
+
+        // Store Architecture
+        const initialData = {
+            webAppUrl: GOOGLE_SCRIPT_URL !== "urlgooglescript" ? GOOGLE_SCRIPT_URL : '',
+            activeClassId: 'k1',
+            mapel: ['Al-Qur\'an Hadits', 'Aqidah Akhlak', 'Fiqih', 'SKI', 'Bahasa Arab', 'Matematika', 'Bahasa Indonesia', 'IPA', 'IPS', 'PPKn', 'SBDK', 'PJOK'],
+            kelas: [
+                { id: 'k1', nama: 'Kelas 1', wali: 'Ustadzah Siti Aminah, S.Pd.' },
+                { id: 'k2', nama: 'Kelas 2', wali: 'Ustadz Ahmad Dahlan, S.Pd.I' },
+                { id: 'k3', nama: 'Kelas 3', wali: 'Ustadzah Nur Khotimah, M.Pd.' }
+            ],
+            siswa: [
+                { id: 's1', kelasId: 'k1', nisn: '31245678', nama: 'Aditya Pratama', tempat: 'Malang', tgl: '2018-04-12' },
+                { id: 's2', kelasId: 'k1', nisn: '31245679', nama: 'Siti Nurhaliza', tempat: 'Poncokusumo', tgl: '2018-08-22' },
+                { id: 's3', kelasId: 'k1', nisn: '31245680', nama: 'Muhammad Rizky', tempat: 'Sumberejo', tgl: '2018-01-05' }
+            ],
+            absensi: {
+                '2026-03-30': [
+                    { siswaId: 's1', status: 'Hadir', ket: '-' },
+                    { siswaId: 's2', status: 'Hadir', ket: '-' },
+                    { siswaId: 's3', status: 'Izin', ket: 'Acara keluarga' }
+                ]
+            },
+            nilai: [
+                { id: 'n1', siswaId: 's1', mapel: 'Al-Qur\'an Hadits', harian: 85, uts: 80, uas: 90 },
+                { id: 'n2', siswaId: 's1', mapel: 'Fiqih', harian: 90, uts: 88, uas: 85 },
+                { id: 'n3', siswaId: 's2', mapel: 'Al-Qur\'an Hadits', harian: 95, uts: 92, uas: 94 }
+            ],
+            jadwal: [
+                { id: 'j1', kelasId: 'k1', hari: 'Senin', jam: '07:00 - 08:15', mapel: 'Al-Qur\'an Hadits', guru: 'Ustadzah Siti Aminah, S.Pd.' },
+                { id: 'j2', kelasId: 'k1', hari: 'Senin', jam: '08:15 - 09:30', mapel: 'Bahasa Arab', guru: 'Ustadz Ahmad Dahlan, S.Pd.I' }
+            ],
+            jurnal: [
+                { id: 'jr1', kelasId: 'k1', tgl: '2026-03-30', jam: '1-2', mapel: 'Al-Qur\'an Hadits', guru: 'Ustadzah Siti Aminah', materi: 'Hafalan Surah At-Takatsur', catatan: 'Anak-anak sangat antusias' }
+            ]
+        };
+
+        let store = JSON.parse(localStorage.getItem('siakad_mi_darusalam_db')) || initialData;
+
+        if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL !== "urlgooglescript" && !store.webAppUrl) {
+            store.webAppUrl = GOOGLE_SCRIPT_URL;
+        }
+
+        function saveData(autoSync = true) {
+            localStorage.setItem('siakad_mi_darusalam_db', JSON.stringify(store));
+            render();
+            if (autoSync && store.webAppUrl) {
+                syncToSpreadsheet(true);
+            }
+        }
+
+        // Realtime WIB Clock
+        function updateWIBClock() {
+            const now = new Date();
+            const optionsDate = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', timeZone: 'Asia/Jakarta' };
+            const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: 'Asia/Jakarta' };
+            
+            const dateStr = now.toLocaleDateString('id-ID', optionsDate);
+            const timeStr = now.toLocaleTimeString('id-ID', optionsTime);
+
+            const clockEl = document.getElementById('wib-clock');
+            if (clockEl) {
+                clockEl.innerText = `${timeStr} WIB - ${dateStr}`;
+            }
+        }
+        setInterval(updateWIBClock, 1000);
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // SPREADSHEET SYNC ENGINE
+        function saveSpreadsheetConfig() {
+            const urlInput = document.getElementById('spreadsheet-web-app-url').value.trim();
+            store.webAppUrl = urlInput;
+            closeModal('modal-spreadsheet');
+            showToast(urlInput ? 'URL Web App Tersimpan!' : 'URL dikosongkan.');
+            saveData(false);
+            if (urlInput) syncToSpreadsheet(false);
+        }
+
+        async function syncToSpreadsheet(silent = false) {
+            if (!store.webAppUrl) {
+                if (!silent) openModal('modal-spreadsheet');
+                return;
+            }
+
+            const syncIcon = document.getElementById('sync-icon');
+            const syncText = document.getElementById('sync-text');
+
+            if (syncIcon) syncIcon.classList.add('fa-spin');
+            if (syncText) syncText.innerText = 'Menyinkronkan...';
+
+            try {
+                const response = await fetch(store.webAppUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({
+                        action: 'syncAllData',
+                        data: store
+                    })
+                });
+
+                const res = await response.json();
+                if (res.status === 'success') {
+                    if (!silent) showToast('Data sukses disinkronkan ke Spreadsheet!');
+                } else {
+                    if (!silent) showToast('Sync gagal: ' + (res.message || 'Error'));
+                }
+            } catch (err) {
+                console.error('Spreadsheet Sync Error:', err);
+                if (!silent) showToast('Gagal terhubung ke Google Apps Script.');
+            } finally {
+                if (syncIcon) syncIcon.classList.remove('fa-spin');
+                if (syncText) syncText.innerText = 'Sinkron ke Sheets';
+            }
+        }
+
+        function switchTab(tab) {
+            const tabs = ['dashboard', 'kelas', 'siswa', 'absen', 'nilai', 'jadwal', 'jurnal'];
+            const titles = {
+                dashboard: ['Dashboard Utama', 'Ringkasan aktivitas akademik MI Darusalam'],
+                kelas: ['Kelola Kelas & Wali Kelas', 'Tambah dan atur rombel serta wali kelas'],
+                siswa: ['Data Siswa', 'Kelola biodata siswa per kelas'],
+                absen: ['Tabel Presensi / Absensi Realtime', 'Pengabsenan harian per tanggal dan rekapan hari'],
+                nilai: ['Penilaian Siswa', 'Input Nilai Harian, UTS, UAS, & Nilai Akhir'],
+                jadwal: ['Jadwal Pelajaran', 'Jadwal pelajaran harian kelas'],
+                jurnal: ['Jurnal Pengajaran Kelas', 'Catatan jurnal mengajar harian guru']
+            };
+
+            tabs.forEach(t => {
+                const sec = document.getElementById(`sec-${t}`);
+                if (sec) sec.classList.add('hidden');
+                const btn = document.getElementById(`nav-${t}`);
+                if (btn) {
+                    btn.classList.remove('text-amber-300', 'bg-emerald-800/80', 'font-semibold');
+                    btn.classList.add('text-emerald-100');
+                }
+            });
+
+            document.getElementById(`sec-${tab}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tab}`);
+            if (activeBtn) {
+                activeBtn.classList.add('text-amber-300', 'bg-emerald-800/80', 'font-semibold');
+                activeBtn.classList.remove('text-emerald-100');
+            }
+
+            document.getElementById('page-title').innerText = titles[tab][0];
+            document.getElementById('page-subtitle').innerText = titles[tab][1];
+
+            if (tab === 'absen') renderAbsensi();
+        }
+
+        function changeActiveClass(id) {
+            store.activeClassId = id;
+            saveData(false);
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
+        }
+
+        function openModal(id) {
+            if (id === 'modal-spreadsheet') {
+                document.getElementById('spreadsheet-web-app-url').value = store.webAppUrl || '';
+            }
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('flex');
+        }
+
+        // KELAS HANDLERS
+        function openClassModal(id = null) {
+            document.getElementById('form-kelas').reset();
+            document.getElementById('kelas-id').value = '';
+            document.getElementById('modal-kelas-title').innerText = 'Tambah Kelas Baru';
+
+            if (id) {
+                const k = store.kelas.find(item => item.id === id);
+                if (k) {
+                    document.getElementById('kelas-id').value = k.id;
+                    document.getElementById('kelas-nama').value = k.nama;
+                    document.getElementById('kelas-wali').value = k.wali;
+                    document.getElementById('modal-kelas-title').innerText = 'Edit Data Kelas';
+                }
+            }
+            openModal('modal-kelas');
+        }
+
+        function saveKelas(e) {
+            e.preventDefault();
+            const id = document.getElementById('kelas-id').value;
+            const nama = document.getElementById('kelas-nama').value;
+            const wali = document.getElementById('kelas-wali').value;
+
+            if (id) {
+                const idx = store.kelas.findIndex(k => k.id === id);
+                if (idx !== -1) store.kelas[idx] = { ...store.kelas[idx], nama, wali };
+            } else {
+                const newId = 'k' + Date.now();
+                store.kelas.push({ id: newId, nama, wali });
+                if (!store.activeClassId) store.activeClassId = newId;
+            }
+
+            closeModal('modal-kelas');
+            showToast('Data Kelas Berhasil Disimpan!');
+            saveData();
+        }
+
+        function deleteKelas(id) {
+            if (store.kelas.length <= 1) {
+                showToast('Harus menyisakan minimal satu kelas.');
+                return;
+            }
+            if (confirm('Hapus kelas ini? Data siswa terkait akan ikut terhapus.')) {
+                store.kelas = store.kelas.filter(k => k.id !== id);
+                store.siswa = store.siswa.filter(s => s.kelasId !== id);
+                if (store.activeClassId === id) store.activeClassId = store.kelas[0].id;
+                showToast('Kelas Berhasil Dihapus!');
+                saveData();
+            }
+        }
+
+        // SISWA HANDLERS
+        function openStudentModal(id = null) {
+            document.getElementById('form-siswa').reset();
+            document.getElementById('siswa-id').value = '';
+            document.getElementById('modal-siswa-title').innerText = 'Tambah Siswa Baru';
+
+            if (id) {
+                const s = store.siswa.find(item => item.id === id);
+                if (s) {
+                    document.getElementById('siswa-id').value = s.id;
+                    document.getElementById('siswa-nisn').value = s.nisn || '';
+                    document.getElementById('siswa-nama').value = s.nama;
+                    document.getElementById('siswa-tempat').value = s.tempat;
+                    document.getElementById('siswa-tgl').value = s.tgl;
+                    document.getElementById('modal-siswa-title').innerText = 'Edit Data Siswa';
+                }
+            }
+            openModal('modal-siswa');
+        }
+
+        function saveSiswa(e) {
+            e.preventDefault();
+            const id = document.getElementById('siswa-id').value;
+            const nisn = document.getElementById('siswa-nisn').value;
+            const nama = document.getElementById('siswa-nama').value;
+            const tempat = document.getElementById('siswa-tempat').value;
+            const tgl = document.getElementById('siswa-tgl').value;
+
+            if (id) {
+                const idx = store.siswa.findIndex(s => s.id === id);
+                if (idx !== -1) {
+                    store.siswa[idx] = { ...store.siswa[idx], nisn, nama, tempat, tgl };
+                }
+            } else {
+                store.siswa.push({
+                    id: 's' + Date.now(),
+                    kelasId: store.activeClassId,
+                    nisn, nama, tempat, tgl
+                });
+            }
+
+            closeModal('modal-siswa');
+            showToast('Data Siswa Berhasil Disimpan!');
+            saveData();
+        }
+
+        function deleteSiswa(id) {
+            if (confirm('Hapus data siswa ini?')) {
+                store.siswa = store.siswa.filter(s => s.id !== id);
+                showToast('Siswa Berhasil Dihapus!');
+                saveData();
+            }
+        }
+
+        // ABSENSI HANDLERS
+        function getTodayString() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        function renderAbsensi() {
+            const datePicker = document.getElementById('absen-date-picker');
+            if (!datePicker.value) datePicker.value = getTodayString();
+            const targetDate = datePicker.value;
+
+            const dateObj = new Date(targetDate + 'T00:00:00');
+            const daysIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const dayName = daysIndo[dateObj.getDay()] || '';
+            document.getElementById('absen-hari-tanggal-title').innerText = `Presensi Hari ${dayName}, ${targetDate}`;
+
+            const filteredSiswa = store.siswa.filter(s => s.kelasId === store.activeClassId);
+            const currentAbsenList = store.absensi[targetDate] || [];
+
+            const tableBody = document.getElementById('table-absen-body');
+            if (filteredSiswa.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400 text-xs">Belum ada siswa di kelas ini.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = filteredSiswa.map((s, idx) => {
+                const existing = currentAbsenList.find(a => a.siswaId === s.id) || { status: 'Hadir', ket: '-' };
+                return `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 text-center font-bold text-slate-400 text-xs">${idx + 1}</td>
+                        <td class="p-3 font-bold text-slate-800 text-xs md:text-sm">${s.nama}</td>
+                        <td class="p-3 text-center">
+                            <select id="absen-status-${s.id}" class="text-xs font-bold rounded-xl px-3 py-1.5 border border-slate-300 focus:ring-2 focus:ring-emerald-500">
+                                <option value="Hadir" ${existing.status === 'Hadir' ? 'selected' : ''} class="text-emerald-700">Hadir</option>
+                                <option value="Izin" ${existing.status === 'Izin' ? 'selected' : ''} class="text-amber-700">Izin</option>
+                                <option value="Sakit" ${existing.status === 'Sakit' ? 'selected' : ''} class="text-blue-700">Sakit</option>
+                                <option value="Alpha" ${existing.status === 'Alpha' ? 'selected' : ''} class="text-rose-700">Alpha</option>
+                            </select>
+                        </td>
+                        <td class="p-3">
+                            <input type="text" id="absen-ket-${s.id}" value="${existing.ket !== '-' ? existing.ket : ''}" placeholder="Keterangan (opsional)..." class="w-full text-xs border border-slate-200 rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            const historyContainer = document.getElementById('absen-history-container');
+            const dates = Object.keys(store.absensi).sort().reverse();
+
+            if (dates.length === 0) {
+                historyContainer.innerHTML = `<p class="text-xs text-slate-400">Belum ada riwayat presensi yang tersimpan.</p>`;
+            } else {
+                historyContainer.innerHTML = dates.slice(0, 5).map(d => {
+                    const list = store.absensi[d];
+                    const hadirCount = list.filter(item => item.status === 'Hadir').length;
+                    const izinCount = list.filter(item => item.status === 'Izin').length;
+                    const sakitCount = list.filter(item => item.status === 'Sakit').length;
+                    const alphaCount = list.filter(item => item.status === 'Alpha').length;
+
+                    return `
+                        <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                            <div class="font-bold text-slate-700 flex items-center gap-2">
+                                <i class="fa-regular fa-calendar-check text-emerald-600"></i> Tanggal ${d}
+                            </div>
+                            <div class="flex gap-2 font-bold text-[10px] md:text-xs">
+                                <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg">Hadir: ${hadirCount}</span>
+                                <span class="px-2.5 py-1 bg-amber-100 text-amber-800 rounded-lg">Izin: ${izinCount}</span>
+                                <span class="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-lg">Sakit: ${sakitCount}</span>
+                                <span class="px-2.5 py-1 bg-rose-100 text-rose-800 rounded-lg">Alpha: ${alphaCount}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function saveAllAbsenHariIni() {
+            const targetDate = document.getElementById('absen-date-picker').value || getTodayString();
+            const filteredSiswa = store.siswa.filter(s => s.kelasId === store.activeClassId);
+
+            if (filteredSiswa.length === 0) {
+                showToast('Tidak ada siswa untuk diabsen.');
+                return;
+            }
+
+            const newAbsenList = filteredSiswa.map(s => {
+                const statusEl = document.getElementById(`absen-status-${s.id}`);
+                const ketEl = document.getElementById(`absen-ket-${s.id}`);
+                return {
+                    siswaId: s.id,
+                    status: statusEl ? statusEl.value : 'Hadir',
+                    ket: (ketEl && ketEl.value.trim()) ? ketEl.value.trim() : '-'
+                };
+            });
+
+            store.absensi[targetDate] = newAbsenList;
+            showToast(`Presensi tanggal ${targetDate} berhasil disimpan!`);
+            saveData();
+        }
+
+        // MAPEL & PENILAIAN
+        function openManageMapelModal() {
+            renderMapelList();
+            openModal('modal-mapel');
+        }
+
+        function renderMapelList() {
+            const listEl = document.getElementById('mapel-list');
+            listEl.innerHTML = store.mapel.map((m, idx) => `
+                <li class="flex justify-between items-center py-2 px-2 text-xs text-slate-700">
+                    <span class="font-medium">${idx + 1}. ${m}</span>
+                    <button onclick="removeMapel('${m}')" class="text-rose-500 hover:text-rose-700 font-bold text-xs"><i class="fa-solid fa-trash"></i></button>
+                </li>
+            `).join('');
+        }
+
+        function addCustomMapel() {
+            const input = document.getElementById('mapel-baru-input');
+            const val = input.value.trim();
+            if (!val) return;
+            if (store.mapel.includes(val)) {
+                showToast('Mata pelajaran sudah ada!');
+                return;
+            }
+            store.mapel.push(val);
+            input.value = '';
+            renderMapelList();
+            showToast('Mapel baru ditambahkan!');
+            saveData();
+        }
+
+        function removeMapel(mapelName) {
+            if (confirm(`Hapus mapel "${mapelName}"?`)) {
+                store.mapel = store.mapel.filter(m => m !== mapelName);
+                renderMapelList();
+                saveData();
+            }
+        }
+
+        function openNilaiModal(siswaId) {
+            const s = store.siswa.find(item => item.id === siswaId);
+            if (!s) return;
+
+            document.getElementById('nilai-siswa-id').value = s.id;
+            document.getElementById('nilai-siswa-nama').innerText = `Siswa: ${s.nama}`;
+
+            const selectMapel = document.getElementById('nilai-mapel-select');
+            selectMapel.innerHTML = store.mapel.map(m => `<option value="${m}">${m}</option>`).join('');
+
+            document.getElementById('nilai-harian').value = 80;
+            document.getElementById('nilai-uts').value = 80;
+            document.getElementById('nilai-uas').value = 80;
+
+            openModal('modal-nilai');
+        }
+
+        function saveNilaiSiswa(e) {
+            e.preventDefault();
+            const siswaId = document.getElementById('nilai-siswa-id').value;
+            const mapel = document.getElementById('nilai-mapel-select').value;
+            const harian = Number(document.getElementById('nilai-harian').value);
+            const uts = Number(document.getElementById('nilai-uts').value);
+            const uas = Number(document.getElementById('nilai-uas').value);
+
+            const existingIdx = store.nilai.findIndex(n => n.siswaId === siswaId && n.mapel === mapel);
+            if (existingIdx !== -1) {
+                store.nilai[existingIdx] = { ...store.nilai[existingIdx], harian, uts, uas };
+            } else {
+                store.nilai.push({
+                    id: 'n' + Date.now(),
+                    siswaId, mapel, harian, uts, uas
+                });
+            }
+
+            closeModal('modal-nilai');
+            showToast('Nilai berhasil disimpan!');
+            saveData();
+        }
+
+        // JADWAL PELAJARAN
+        function openScheduleModal(id = null) {
+            document.getElementById('form-jadwal').reset();
+            document.getElementById('jadwal-id').value = '';
+            document.getElementById('modal-jadwal-title').innerText = 'Tambah Jadwal Pelajaran';
+
+            const selectMapel = document.getElementById('jadwal-mapel');
+            selectMapel.innerHTML = store.mapel.map(m => `<option value="${m}">${m}</option>`).join('');
+
+            if (id) {
+                const j = store.jadwal.find(item => item.id === id);
+                if (j) {
+                    document.getElementById('jadwal-id').value = j.id;
+                    document.getElementById('jadwal-hari').value = j.hari;
+                    document.getElementById('jadwal-jam').value = j.jam;
+                    document.getElementById('jadwal-mapel').value = j.mapel;
+                    document.getElementById('jadwal-guru').value = j.guru;
+                    document.getElementById('modal-jadwal-title').innerText = 'Edit Jadwal Pelajaran';
+                }
+            }
+            openModal('modal-jadwal');
+        }
+
+        function saveJadwal(e) {
+            e.preventDefault();
+            const id = document.getElementById('jadwal-id').value;
+            const hari = document.getElementById('jadwal-hari').value;
+            const jam = document.getElementById('jadwal-jam').value;
+            const mapel = document.getElementById('jadwal-mapel').value;
+            const guru = document.getElementById('jadwal-guru').value;
+
+            if (id) {
+                const idx = store.jadwal.findIndex(j => j.id === id);
+                if (idx !== -1) store.jadwal[idx] = { ...store.jadwal[idx], hari, jam, mapel, guru };
+            } else {
+                store.jadwal.push({
+                    id: 'j' + Date.now(),
+                    kelasId: store.activeClassId,
+                    hari, jam, mapel, guru
+                });
+            }
+
+            closeModal('modal-jadwal');
+            showToast('Jadwal Berhasil Disimpan!');
+            saveData();
+        }
+
+        function deleteJadwal(id) {
+            if (confirm('Hapus item jadwal ini?')) {
+                store.jadwal = store.jadwal.filter(j => j.id !== id);
+                showToast('Jadwal Dihapus!');
+                saveData();
+            }
+        }
+
+        // JURNAL KELAS
+        function openJurnalModal() {
+            document.getElementById('form-jurnal').reset();
+            document.getElementById('jurnal-tgl').value = getTodayString();
+            
+            const selectMapel = document.getElementById('jurnal-mapel');
+            selectMapel.innerHTML = store.mapel.map(m => `<option value="${m}">${m}</option>`).join('');
+
+            openModal('modal-jurnal');
+        }
+
+        function saveJurnal(e) {
+            e.preventDefault();
+            const tgl = document.getElementById('jurnal-tgl').value;
+            const jam = document.getElementById('jurnal-jam').value;
+            const mapel = document.getElementById('jurnal-mapel').value;
+            const guru = document.getElementById('jurnal-guru').value;
+            const materi = document.getElementById('jurnal-materi').value;
+            const catatan = document.getElementById('jurnal-catatan').value;
+
+            store.jurnal.push({
+                id: 'jr' + Date.now(),
+                kelasId: store.activeClassId,
+                tgl, jam, mapel, guru, materi, catatan: catatan || '-'
+            });
+
+            closeModal('modal-jurnal');
+            showToast('Jurnal Kelas Berhasil Diisi!');
+            saveData();
+        }
+
+        function deleteJurnal(id) {
+            if (confirm('Hapus jurnal ini?')) {
+                store.jurnal = store.jurnal.filter(jr => jr.id !== id);
+                showToast('Jurnal Dihapus!');
+                saveData();
+            }
+        }
+
+        // MAIN RENDER ENGINE
+        function render() {
+            // Update Active Class Labels
+            const activeClassObj = store.kelas.find(k => k.id === store.activeClassId) || store.kelas[0];
+            document.querySelectorAll('.active-class-label').forEach(el => el.innerText = activeClassObj ? activeClassObj.nama : 'Kelas');
+
+            // Render Class Dropdown
+            const selectClass = document.getElementById('active-class-select');
+            selectClass.innerHTML = store.kelas.map(k => `<option value="${k.id}" ${k.id === store.activeClassId ? 'selected' : ''}>${k.nama}</option>`).join('');
+
+            // Render Dashboard Stats
+            document.getElementById('stat-total-kelas').innerText = store.kelas.length;
+            document.getElementById('stat-total-siswa').innerText = store.siswa.length;
+            document.getElementById('stat-total-mapel').innerText = store.mapel.length;
+
+            const today = getTodayString();
+            const todayAbsen = store.absensi[today] || [];
+            const hadirToday = todayAbsen.filter(a => a.status === 'Hadir').length;
+            const rate = store.siswa.length > 0 ? Math.round((hadirToday / store.siswa.length) * 100) : 0;
+            document.getElementById('stat-hadir-rate').innerText = `${rate}%`;
+
+            // Render Dashboard Class Cards
+            const dashboardClassList = document.getElementById('dashboard-class-list');
+            dashboardClassList.innerHTML = store.kelas.map(k => {
+                const countSiswa = store.siswa.filter(s => s.kelasId === k.id).length;
+                return `
+                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-emerald-500 transition">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-black text-slate-800 text-sm">${k.nama}</h4>
+                                <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">${countSiswa} Siswa</span>
+                            </div>
+                            <p class="text-xs text-slate-500"><i class="fa-solid fa-user-tie mr-1 text-slate-400"></i> Wali: ${k.wali}</p>
+                        </div>
+                        <button onclick="changeActiveClass('${k.id}')" class="mt-4 w-full py-1.5 text-xs bg-white hover:bg-emerald-50 text-emerald-800 border border-slate-200 hover:border-emerald-300 font-bold rounded-lg transition">
+                            Pilih Kelas Ini
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            // Render Table Kelas
+            const tableKelas = document.getElementById('table-kelas-body');
+            tableKelas.innerHTML = store.kelas.map((k, idx) => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-4 text-center font-bold text-slate-400 text-xs">${idx + 1}</td>
+                    <td class="p-4 font-bold text-slate-800 text-xs md:text-sm">${k.nama}</td>
+                    <td class="p-4 text-slate-600 text-xs md:text-sm">${k.wali}</td>
+                    <td class="p-4 text-center font-bold text-emerald-700 text-xs">${store.siswa.filter(s => s.kelasId === k.id).length} Siswa</td>
+                    <td class="p-4 text-center space-x-2">
+                        <button onclick="openClassModal('${k.id}')" class="p-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg text-xs"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteKelas('${k.id}')" class="p-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Render Table Siswa Active Class
+            const tableSiswa = document.getElementById('table-siswa-body');
+            const filteredSiswa = store.siswa.filter(s => s.kelasId === store.activeClassId);
+            if (filteredSiswa.length === 0) {
+                tableSiswa.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 text-xs">Belum ada siswa terdaftar di kelas ini.</td></tr>`;
+            } else {
+                tableSiswa.innerHTML = filteredSiswa.map((s, idx) => `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-4 text-center font-bold text-slate-400 text-xs">${idx + 1}</td>
+                        <td class="p-4 font-mono text-slate-500 text-xs">${s.nisn || '-'}</td>
+                        <td class="p-4 font-bold text-slate-800 text-xs md:text-sm">${s.nama}</td>
+                        <td class="p-4 text-slate-600 text-xs">${s.tempat}, ${s.tgl}</td>
+                        <td class="p-4 text-center space-x-2">
+                            <button onclick="openStudentModal('${s.id}')" class="p-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg text-xs"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteSiswa('${s.id}')" class="p-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Render Table Nilai Active Class
+            const tableNilai = document.getElementById('table-nilai-body');
+            if (filteredSiswa.length === 0) {
+                tableNilai.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 text-xs">Belum ada siswa di kelas ini.</td></tr>`;
+            } else {
+                tableNilai.innerHTML = filteredSiswa.map((s, idx) => {
+                    const studentNilai = store.nilai.filter(n => n.siswaId === s.id);
+                    if (studentNilai.length === 0) {
+                        return `
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 text-center font-bold text-slate-400 text-xs">${idx + 1}</td>
+                                <td class="p-3 font-bold text-slate-800 text-xs md:text-sm">${s.nama}</td>
+                                <td class="p-3 text-slate-400 italic text-xs" colspan="5">Belum ada nilai terinput</td>
+                                <td class="p-3 text-center">
+                                    <button onclick="openNilaiModal('${s.id}')" class="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold">+ Input Nilai</button>
+                                </td>
+                            </tr>
+                        `;
+                    }
+
+                    return studentNilai.map((n, nIdx) => {
+                        const finalScore = ((n.harian * 0.4) + (n.uts * 0.3) + (n.uas * 0.3)).toFixed(1);
+                        return `
+                            <tr class="hover:bg-slate-50">
+                                ${nIdx === 0 ? `<td rowspan="${studentNilai.length}" class="p-3 text-center font-bold text-slate-400 text-xs align-top border-r border-slate-100">${idx + 1}</td>` : ''}
+                                ${nIdx === 0 ? `<td rowspan="${studentNilai.length}" class="p-3 font-bold text-slate-800 text-xs md:text-sm align-top border-r border-slate-100">${s.nama}</td>` : ''}
+                                <td class="p-3 font-medium text-slate-700 text-xs">${n.mapel}</td>
+                                <td class="p-3 text-center font-mono text-slate-600 text-xs">${n.harian}</td>
+                                <td class="p-3 text-center font-mono text-slate-600 text-xs">${n.uts}</td>
+                                <td class="p-3 text-center font-mono text-slate-600 text-xs">${n.uas}</td>
+                                <td class="p-3 text-center font-bold font-mono bg-emerald-50 text-emerald-900 text-xs">${finalScore}</td>
+                                <td class="p-3 text-center">
+                                    <button onclick="openNilaiModal('${s.id}')" class="p-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg text-xs"><i class="fa-solid fa-pen"></i> Edit</button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }).join('');
+            }
+
+            // Render Table Jadwal Active Class
+            const tableJadwal = document.getElementById('table-jadwal-body');
+            const filteredJadwal = store.jadwal.filter(j => j.kelasId === store.activeClassId);
+            if (filteredJadwal.length === 0) {
+                tableJadwal.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 text-xs">Belum ada jadwal pelajaran untuk kelas ini.</td></tr>`;
+            } else {
+                tableJadwal.innerHTML = filteredJadwal.map((j, idx) => `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-4 text-center font-bold text-slate-400 text-xs">${idx + 1}</td>
+                        <td class="p-4 font-bold text-emerald-800 text-xs">${j.hari}</td>
+                        <td class="p-4 font-mono text-slate-600 text-xs">${j.jam}</td>
+                        <td class="p-4 font-bold text-slate-800 text-xs md:text-sm">${j.mapel}</td>
+                        <td class="p-4 text-slate-600 text-xs">${j.guru}</td>
+                        <td class="p-4 text-center space-x-2">
+                            <button onclick="openScheduleModal('${j.id}')" class="p-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg text-xs"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteJadwal('${j.id}')" class="p-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Render Table Jurnal Active Class
+            const tableJurnal = document.getElementById('table-jurnal-body');
+            const filteredJurnal = store.jurnal.filter(jr => jr.kelasId === store.activeClassId);
+            if (filteredJurnal.length === 0) {
+                tableJurnal.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400 text-xs">Belum ada catatan jurnal mengajar di kelas ini.</td></tr>`;
+            } else {
+                tableJurnal.innerHTML = filteredJurnal.map((jr, idx) => `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-4 text-center font-bold text-slate-400 text-xs">${idx + 1}</td>
+                        <td class="p-4 font-mono text-slate-600 text-xs">${jr.tgl}</td>
+                        <td class="p-4 font-bold text-slate-700 text-xs">${jr.jam}</td>
+                        <td class="p-4 text-xs">
+                            <span class="font-bold text-slate-800">${jr.mapel}</span><br>
+                            <span class="text-slate-500 text-[11px]">${jr.guru}</span>
+                        </td>
+                        <td class="p-4 text-slate-700 text-xs font-medium">${jr.materi}</td>
+                        <td class="p-4 text-slate-500 italic text-xs">${jr.catatan}</td>
+                        <td class="p-4 text-center">
+                            <button onclick="deleteJurnal('${jr.id}')" class="p-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg text-xs"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // INITIAL LOAD
+        window.onload = function() {
+            render();
+            updateWIBClock();
+        };
+    </script>
+</body>
+</html>
